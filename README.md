@@ -5,22 +5,20 @@ This project demonstrates how to set up a **basic home Security Operations Cente
 ---
 
 ## ⚙️ Project Overview
-- **Environment:** Cyber Range Lab (Azure subscription provided)  
+- **Environment:** Microsoft Azure subscription 
 - **Objective:** Collect and analyze malicious traffic using Microsoft Sentinel  
-- **Focus Areas:** Honeypot setup, log forwarding, KQL queries, attack visualization  
+- **Focus Areas:** Honeypot setup, log forwarding, KQL queries, attack visualization
+
+## 🏗️ Lab Architecture
+
+<img width="2150" height="1260" alt="image" src="https://github.com/user-attachments/assets/ea56823f-873f-4b65-9798-393ea9c8cd03" />
+
 
 ---
 ## 🐝 Honeypot?
 
-A **honeypot** is a decoy system intentionally designed to look vulnerable so attackers will target it.  
-Its purpose is to **attract, detect, and analyze malicious activity** without putting production systems at risk.  
-
-**Key purposes of a honeypot in cybersecurity:**
-- 🎯 **Attract attackers:** Appears as an easy target to lure malicious traffic  
-- 📊 **Collect intelligence:** Records attacker tools, techniques, and behavior  
-- 🚨 **Early detection:** Any interaction is suspicious since no real users access it  
-- 🧪 **Test defenses:** Safe way to practice detection, logging, and incident response  
-- 📚 **Research & learning:** Helps analysts study real-world attacks in a controlled environment  
+A **honeypot** is a decoy system made to look vulnerable so attackers interact with it.  
+It helps security teams **attract and detect threats, gather intelligence, test defenses, and study real-world attack behavior** without risking production systems.
 
 In this project, the Azure VM was configured as a honeypot by exposing it to the internet.  
 Attackers attempted brute-force logins, and these events were captured, forwarded, and analyzed in **Microsoft Sentinel**.  
