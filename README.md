@@ -1,6 +1,6 @@
 # Azure SOC Honeypot 🍯
 
-This project demonstrates how to set up a **basic home Security Operations Center (SOC) in Azure**. Using a honeypot VM, a central log repository, and Microsoft Sentinel, I captured and analyzed real-world brute-force attack data.  
+This project demonstrates the set up I did for a **basic home Security Operations Center (SOC) in Azure**. Using a honeypot VM, a central log repository, and Microsoft Sentinel, I captured and analyzed real-world brute-force attack data.  
 
 ---
 
@@ -142,7 +142,7 @@ This project provided a practical, end-to-end example of a small SOC pipeline in
 **Cost & security note**
 - Leaving cloud VMs or workspaces running can incur charges and create security risks. Confirm deletion or set up automation to tear down lab resources.
 
-## Next Steps (suggested)
+## Next Steps
 
 - Add richer telemetry: enable Sysmon, install EDR agents in a safe lab image, capture network flow logs.
 - Create custom Sentinel analytic rules to generate alerts for suspicious patterns (e.g., repeated 4625 from multiple IPs).
