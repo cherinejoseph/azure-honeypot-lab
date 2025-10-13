@@ -1,18 +1,25 @@
+<img width="2150" height="1260" alt="image" src="https://github.com/user-attachments/assets/ea56823f-873f-4b65-9798-393ea9c8cd03" />
+
 # Azure SOC Honeypot 🍯
 
-This project demonstrates the set up I did for a **basic home Security Operations Center (SOC) in Azure**. Using a honeypot VM, a central log repository, and Microsoft Sentinel, I captured and analyzed real-world brute-force attack data.  
+In this project, I build a Honeypot using two virtual machines in Azure and configured a central log repository so logs can be ingested into Log Analytics workspace, which is then used by Microsoft Sentinel to build attack maps. I allowed the Honeypot to be exposed to the internet for 24 hours so that I could capture and observe live brute force attack data.
+
+the two main metrics that I will focus on are:
+
+- SecurityEvent (Windows Event Logs)
+- Syslog (Linux Event log)
+
 
 ---
 
 ## ⚙️ Project Overview
-- **Environment:** Microsoft Azure subscription 
-- **Objective:** Collect and analyze malicious traffic using Microsoft Sentinel  
+- **Environment:** Microsoft Azure 
+- **Objective:** Collect and analyze malicious traffic and creating attack maps using Microsoft Sentinel 
 - **Focus Areas:** Honeypot setup, log forwarding, KQL queries, attack visualization
 
 ## 🏗️ Lab Architecture
 
-<img width="2150" height="1260" alt="image" src="https://github.com/user-attachments/assets/ea56823f-873f-4b65-9798-393ea9c8cd03" />
-
+<img width="1272" height="756" alt="image" src="https://github.com/user-attachments/assets/4ab3a224-3b6d-4346-b9b6-c23d7614c5a6" />
 
 ---
 ## 🐝 Honeypot?
