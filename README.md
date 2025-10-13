@@ -34,13 +34,17 @@ Attackers attempted brute-force logins, and these events were captured, forwarde
 
 ## 📌 Lab Checklist
 
-1. **Create a honeypot (VM)**  
-   - Deployed a Windows VM in Azure  
+1. **Create two virtual machines in Azure (1 Windows, 1 Linux)** - *Honeypot*
    - Opened the VM to the public internet by configuring the **Network Security Group (NSG)** to allow all inbound traffic and Disabling the **Windows Firewall** inside the VM.
-   - **Tip — pick an authentic-sounding VM name:** Choose names that look like real infrastructure to make the honeypot more attractive to attackers (e.g., `CORP-NET-EAST-1`, `PAYROLL-SRV-01`, `DC-PRIMARY-01`). My VM name: **`CORP-NET-EAST-1`**.
+   - *I tried to use authentic-sounding VM names that would look like real infrastructure to make the honeypot more attractive to attackers. eg. CORP-NET-DEV (for Windows) and CORPNET (for Linux)*
 
 **VM Creation**
+
+*Windows*
 <img width="2864" height="1560" alt="image" src="https://github.com/user-attachments/assets/6872be19-26fe-46cd-af29-8e72ef1ff238" />
+
+*Linux*
+
 
 **NSG Configuration**  
 <img width="2856" height="1556" alt="image" src="https://github.com/user-attachments/assets/c617a0e5-6047-4a07-b00b-a34c58b2e013" />
