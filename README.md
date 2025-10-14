@@ -2,7 +2,12 @@
 
 # Azure SOC Honeypot 🍯
 
-In this project, I build a Honeypot using two virtual machines in Azure and configured a central log repository so logs can be ingested into Log Analytics workspace, which is then used by Microsoft Sentinel to build attack maps. I allowed the Honeypot to be exposed to the internet for 24 hours so that I could capture and observe live brute force attack data.
+In this project, I deployed a Honeypot in Microsft Azure by exposing two virtual machines (Windows & Linux) to the public internet. I then configured a central log repository so logs can be ingested into Log Analytics workspace, which is then used by Microsoft Sentinel to build attack maps. I allowed the Honeypot to be exposed to the internet for 24 hours so that I could capture and observe live brute force attack data.
+
+The main objective of this lab is to: 
+- collect and analyze logs using KQL
+-  Built an attack map workbook to visualize attacker IPs and their countries
+-   Create a custom detection rule and responded to a confirmed brute-force attack incident
 
 the two main metrics that I will focus on are:
 
@@ -21,13 +26,21 @@ the two main metrics that I will focus on are:
 
 <img width="1272" height="756" alt="image" src="https://github.com/user-attachments/assets/4ab3a224-3b6d-4346-b9b6-c23d7614c5a6" />
 
+The architecutre consists of:
+- Cloud platform (Microsoft Azure)
+- Virtual Network (VNet)
+- Network Security Group (NSG)
+- Virtual Machines ( 1 windows, 1 linux)
+- Log Analytics Workspace
+- Microsoft Sentinel
+- Kusto Query Language (KQL)
 ---
 ## 🐝 Honeypot?
 
 A **honeypot** is a decoy system made to look vulnerable so attackers interact with it.  
 It helps security teams **attract and detect threats, gather intelligence, test defenses, and study real-world attack behavior** without risking production systems.
 
-In this project, the Azure VM was configured as a honeypot by exposing it to the internet.  
+In this project, the Azure VMs were configured as a honeypot by exposing it to the public internet.  
 Attackers attempted brute-force logins, and these events were captured, forwarded, and analyzed in **Microsoft Sentinel**.  
 
 ---
@@ -36,24 +49,131 @@ Attackers attempted brute-force logins, and these events were captured, forwarde
 
 1. **Create two virtual machines in Azure (1 Windows, 1 Linux)** - *Honeypot*
    - Opened the VM to the public internet by configuring the **Network Security Group (NSG)** to allow all inbound traffic and Disabling the **Windows Firewall** inside the VM.
-   - *I tried to use authentic-sounding VM names that would look like real infrastructure to make the honeypot more attractive to attackers. eg. CORP-NET-DEV (for Windows) and CORPNET (for Linux)*
+   - *I tried to use authentic sounding VM names that would look like real infrastructure to make the honeypot more attractive to attackers. eg. CORP-NET-DEV (for Windows) and CORPNET (for Linux)*
+
+Review of important components of set up 
+
+**Resource Group Creation**
+
+<img width="626" height="279" alt="Extra 1" src="https://github.com/user-attachments/assets/e879227c-64d5-4437-8d15-4df415684957" />
+
+```
+Basics
+
+Resource Group
+  └─ Subscription: Azure Subscription 1  
+  └─ Resource Group Name: RG-willis 
+  └─ Region: (US) East US 2
+Review + Create
+  └─ Create (When Prompted)
+```
+**Virtual Network Creation**
+
+<img width="626" height="279" alt="Extra 1" src="https://github.com/user-attachments/assets/3ad66e12-4e04-4654-b7cf-7f832f85da22" />
+
+```
+Basics
+
+Project Details
+  └─ Subscription: Azure Subscription 1  
+  └─ Resource Group Name: RG-willis 
+Instance Details
+  └─ Virtual Network Name: vnet-willis
+  └─ Region: (US) East US 2
+Review + Create
+  └─ Create (When Prompted)
+```
 
 **VM Creation**
 
-*Windows*
-<img width="2864" height="1560" alt="image" src="https://github.com/user-attachments/assets/6872be19-26fe-46cd-af29-8e72ef1ff238" />
+<img width="2360" height="750" alt="image" src="https://github.com/user-attachments/assets/a99a66e6-a1a9-4f4b-84e2-c1f9abed98d5" />
 
-*Linux*
+***Windows***
+
+CORP-NET-DEV
+Windows 10 Pro, version 22H2 - x64 Gen2
+Size:  Standard_D2s_v3 - 2 vcpus, 8 GiB memory 
+Type: Premium SSD
+
+```
+Basics
+
+Project Details
+  └─ Subscription: Azure Subscription 1  
+  └─ Resource Group: RG-willis
+Instance Details 
+  └─ Virtual Machine Name: CORP-NET-EAST  
+  └─ Region: (US) East US 2
+  └─ Image: Windows 10 Pro, Version 22H2 - x64 Gen2  
+Size
+  └─ Standard_B1s 1 vCPU, 1 GiB RAM  
+Administrator Account
+  └─ Username: YourUsername
+  └─ Password: YourPassword
+  └─ Confirm Password: YourPassword  
+Licensing  
+  └─ ☑ I confirm I have an eligible Windows 10/11 license
+```
+
+```
+Disks
+
+OS Disk
+  └─ OS Disk Type: Standard HDD 
+```
+
+```
+Networking
+
+Network Interface
+  └─ Virtual Network: Create New 
+  └─ Subnet: Default 
+  └─ Public IP: (new)  
+  └─ NIC Network Security Group: Basic
+  └─ ☑ Delete public IP and NIC when VM is deleted 
+```
+
+```
+Monitoring
+
+Diagnostics
+  └─ Boot Diagnostics: Disable 
+```
+
+```
+Review + Create
+  └─ Create (When Prompted)
+```
+
+<img width="2868" height="1080" alt="image" src="https://github.com/user-attachments/assets/11665d2a-2edc-4687-8773-6442b4dcb9ad" />
+
+<img width="2838" height="1184" alt="image" src="https://github.com/user-attachments/assets/e4ee1adb-a541-4a57-8a6c-eb7ca444b377" />
+
+<img width="2878" height="1210" alt="image" src="https://github.com/user-attachments/assets/c6633f62-cf50-435a-b549-cdbbdab8776a" />
+
+***Linux***
+
+CORPNET
+Ubuntu Server 22.04 LTS - x64 Gen2
+Size: Image default
+Type: premium SSD
 
 
-**NSG Configuration**  
-<img width="2856" height="1556" alt="image" src="https://github.com/user-attachments/assets/c617a0e5-6047-4a07-b00b-a34c58b2e013" />
+2. **NSG Configuration**  
+
+- Configure the NSG for each vm to allow all onbound traffic.
+- Turn off Firewall in windows vm
+- Note: The Ubuntu VM firewall (UFW) is disabled by default on most cloud platforms. Network security is handled by the cloud provider (e.g., Azure NSG, AWS Security Group).
+- To check the firewall status in linux vm: sudo ufw status
+If needed, you can turn it off manually: sudo ufw disable
+
+
+<img width="1387" height="704" alt="image" src="https://github.com/user-attachments/assets/392d91c8-917f-4b8e-ba04-9854c594dff3" />
 
 ---
+<img width="2340" height="340" alt="image" src="https://github.com/user-attachments/assets/ae83edfb-33e5-4771-bab1-fd2fefd7ad1b" />
 
-<img width="1440" height="746" alt="image" src="https://github.com/user-attachments/assets/82f67a3e-d634-48ea-afbf-2cb6b713c217" />
-
-
+---
 
 2. **Configure log forwarding**  
    - Set up an **Azure Log Analytics Workspace**  
